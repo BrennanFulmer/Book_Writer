@@ -5,5 +5,7 @@ if defined?(ActiveRecord::Migrator) && ActiveRecord::Migrator.needs_migration?
 end
 
 use Rack::MethodOverride
-# run main controller
-# use other controllers
+run ApplicationController
+use BooksController
+use ChaptersController
+use UsersController

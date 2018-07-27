@@ -9,6 +9,7 @@ gem "bcrypt"
 gem "rake"
 gem "shotgun"
 gem 'rack-flash3'
+gem 'dotenv'
 
 group :development do
   gem "pry"
