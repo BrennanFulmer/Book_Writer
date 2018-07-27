@@ -1,15 +1,36 @@
 
-<h1> Login To Book Writer </h1>
+<h1> Welcome to Book Writer </h1>
 
-<form action="" method="POST">
-  <label for="username"> Username: </label>
-	<input type="text" name="username" id="username" maxlength="32" required>
+<form action="/login" method="POST">
+  <fieldset>
+    <legend> Sign In: </legend>
 
-  <label for="password"> Password: </label>
-	<input type="password" name="password" id="password" maxlength="64" required>
+    <% if flash.has?(:message) %>
+      <div id="login error">
+        <h2> <%= flash[:message] %> </h2>
+      </div>
+    <% end %>
 
-	<input type="submit" value="Log In" formenctype="multipart/form-data">
+    <br>
+    <label for="username"> Username: </label>
+    <br>
+    <input type="text" name="username" id="username" maxlength="32" required>
+    <br>
+
+    <br>
+    <label for="password"> Password: </label>
+    <br>
+    <input type="password" name="password" id="password" maxlength="64" required>
+    <br>
+
+    <br>
+    <input type="submit" value="Log In">
+    <br>
+  </fieldset>
 </form>
 
-<!-- link to signup -->
-<!-- link to all books -->
+<br>
+<a href="/signup"> Need an account? Click here to Signup. </a>
+<br>
+<br>
+<a href="/books/all"> Click here for a list of all Books. </a>
