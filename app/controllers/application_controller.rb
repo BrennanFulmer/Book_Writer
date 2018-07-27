@@ -9,7 +9,7 @@ class ApplicationController < Sinatra::Base
   end
 
   get "/" do
-    # default page here
+    erb :index
   end
 
 end
