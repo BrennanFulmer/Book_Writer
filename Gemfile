@@ -12,4 +12,5 @@ gem 'rack-flash3'
 
 group :development do
   gem "pry"
+  gem "tux"
 end
