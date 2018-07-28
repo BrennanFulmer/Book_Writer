@@ -4,6 +4,8 @@ class BooksController < ApplicationController
 
   get "/books" do
     @books = Book.all
+    @authenticated = logged_in?
+
     erb :"/books/index"
   end
 
@@ -15,12 +17,14 @@ class BooksController < ApplicationController
     end
 
     @users_books.compact!
-
     @authenticated = logged_in?
-
     @your_books = @user == current_user
 
     erb :"/books/by_user"
+  end
+
+  get "/books/new" do
+    erb :"/books/new"
   end
 
 end

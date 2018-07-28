@@ -21,4 +21,21 @@ class UsersController < ApplicationController
     end
   end
 
+  post "/login" do
+    user = User.find_by(username: params[:username])
+
+    if user && user.authenticate(params[:password])
+      session[:user_id] = user.id
+      redirect "/books/by-user/#{user.username}"
+    else
+      flash[:message] = "Invalid Username and/or Password"
+      redirect "/"
+    end
+  end
+
+  get "/logout" do
+    session.clear
+    redirect "/books"
+  end
+
 end

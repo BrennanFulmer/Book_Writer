@@ -1,0 +1,23 @@
+
+<h1> All Books </h1>
+
+<% if !@books.empty? %>
+  <ul>
+    <% @books.each do |book| %>
+        <li> <a href="/books/<%= book.slug %>"> <%= book.title %> </a> </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p> No Books Found </p>
+<% end %>
+
+<% if @authenticated %>
+  <br>
+  <a href="/books/new"> Create New Book </a>
+  <br>
+  <br>
+  <a href="/logout"> Logout </a>
+<% else %>
+  <br>
+  <a href="/"> Login </a>
+<% end %>
