@@ -1,0 +1,32 @@
+
+<% if @your_books %>
+  <h1> Welcome <%= @user.username %> </h1>
+<% else %>
+  <h1> Books by <%= @user.username %> </h1>
+<% end %>
+
+<% if !@users_books.empty? %>
+  <h3> Your Books </h3>
+  <ul>
+    <% @users_books.each do |book| %>
+      <li> <a href="/books/<%= book.slug %>"> <%= book.title %> </a> </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p> No Books Found </p>
+<% end %>
+
+<% if @authenticated %>
+  <br>
+  <a href="/books/new"> Create New Book </a>
+  <br>
+<% end %>
+
+<br>
+<a href="/books/all"> List All Books </a>
+
+<% if @authenticated %>
+<br>
+<br>
+<a href="/logout"> Logout </a>
+<% end %>

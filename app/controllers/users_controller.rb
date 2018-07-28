@@ -14,14 +14,11 @@ class UsersController < ApplicationController
     end
 
     if unique_username && new_user.save
-      binding.pry
-      redirect "/books/by_user/#{new_user.username}"
+      redirect "/books/by-user/#{new_user.username}"
     else
-      binding.pry
       flash[:message] = "Invalid Username and/or Password"
       redirect "/signup"
     end
-
   end
 
 end
