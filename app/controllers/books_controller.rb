@@ -4,27 +4,21 @@ class BooksController < ApplicationController
 
   get "/books" do
     @books = Book.all
-    @authenticated = logged_in?
-
+    @user = current_user
     erb :"/books/index"
   end
 
   get "/books/by-user/:username" do
-    @user = User.find_by(username: params[:username])
-
-    @users_books = Book.all.collect do |book|
-      book if book.user == @user
-    end
-
-    @users_books.compact!
+    @user = User.find_by(username: params[:username]) ||
+    User.find_by_slug(params[:username])
     @authenticated = logged_in?
     @your_books = @user == current_user
-
     erb :"/books/by_user"
   end
 
   get "/books/new" do
     if logged_in?
+      @user = current_user
       erb :"/books/new"
     else
       flash[:message] = "You Must Be Signed In To Create A Book"
@@ -43,10 +37,18 @@ class BooksController < ApplicationController
     end
   end
 
-  get "/books/:slug" do
-    binding.pry
-    @book = Book.find_by_slug(params[:slug])
-    erb :"/books/show"
+  get "/books/:title" do
+    @book = Book.find_by(title: params[:title]) ||
+    Book.find_by_slug(params[:title])
+
+    if @book
+      @user = current_user
+      @your_book = @user.id == @book.user_id if @user
+      erb :"/books/show"
+    else
+      flash[:message] = "No '#{params[:title]}' Book Found"
+      redirect "/books"
+    end
   end
 
 end

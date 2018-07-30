@@ -4,11 +4,12 @@ class User < ActiveRecord::Base
 
   has_secure_password
   has_many :books
-  
+
   validates :username, :presence => true, :uniqueness => true
   validates :password, :presence => true
 
   def slug
-    username.downcase.strip.gsub(/\p{P}/, '').gsub(/\W+/, '-')
+    username.downcase.strip.gsub(/_/, ' ').gsub(/\p{P}/, '').gsub(/\W+/, '-')
   end
+  
 end

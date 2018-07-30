@@ -9,6 +9,7 @@ class Chapter < ActiveRecord::Base
   validates :book_id, :presence => true
 
   def slug
-    name.downcase.strip.gsub(/\p{P}/, '').gsub(/\W+/, '-')
+    name.downcase.strip.gsub(/_/, ' ').gsub(/\p{P}/, '').gsub(/\W+/, '-')
   end
+
 end

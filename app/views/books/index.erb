@@ -1,6 +1,12 @@
 
 <h1> All Books </h1>
 
+<% if flash.has?(:message) %>
+  <div id="book list error">
+    <h2> <%= flash[:message] %> </h2>
+  </div>
+<% end %>
+
 <% if !@books.empty? %>
   <ul>
     <% @books.each do |book| %>
@@ -11,9 +17,12 @@
   <p> No Books Found </p>
 <% end %>
 
-<% if @authenticated %>
+<% if @user %>
   <br>
   <a href="/books/new"> Create New Book </a>
+  <br>
+  <br>
+  <a href="/books/by-user/<%= @user.slug %>"> Your Books </a>
   <br>
   <br>
   <a href="/logout"> Logout </a>
