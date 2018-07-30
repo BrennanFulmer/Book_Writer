@@ -1,2 +1,32 @@
 
-<h1> Write a New Book</h1>
+<h1> Write a New Book </h1>
+
+<p>
+  Book titles must be unique and contain 5 to 64 characters.
+  <br>
+  Valid characters are any letter (either case), number, or the punctuation characters below.
+  <br>
+  ! @ $ % ^ * + _
+</p>
+
+<form action="/books" method="post">
+  <fieldset>
+    <legend> New Book: </legend>
+
+    <% if flash.has?(:message) %>
+      <div id="new book error">
+        <h2> <%= flash[:message] %> </h2>
+      </div>
+    <% end %>
+
+    <br>
+    <label for="title"> Books Title: </label>
+    <br>
+    <input type="text" name="book[title]" id="title" maxlength="64" pattern="[a-zA-Z0-9!@$%^*+_]{5,64}" required>
+    <br>
+
+    <br>
+    <br>
+    <input type="submit" value="Create Book">
+  </fieldset>
+</form>

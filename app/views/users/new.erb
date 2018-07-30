@@ -8,7 +8,7 @@
   <br>
   Valid characters are any letter (either case), number, or the punctuation characters below.
   <br>
-  ! @ $ % ^ * +
+  ! @ $ % ^ * + _
 </p>
 
 <form action="/signup" method="POST">
@@ -24,13 +24,13 @@
     <br>
     <label for="username"> Username: </label>
     <br>
-    <input type="text" name="username" id="username" maxlength="32" pattern="[a-zA-Z0-9!@$%^*+]{5,32}" required>
+    <input type="text" name="username" id="username" maxlength="32" pattern="[a-zA-Z0-9!@$%^*+_]{5,32}" required>
     <br>
 
     <br>
     <label for="password"> Password: </label>
     <br>
-    <input type="password" name="password" id="password" maxlength="64" pattern="[a-zA-Z0-9!@$%^*+]{8,64}" required>
+    <input type="password" name="password" id="password" maxlength="64" pattern="[a-zA-Z0-9!@$%^*+_]{8,64}" required>
     <br>
 
     <br>

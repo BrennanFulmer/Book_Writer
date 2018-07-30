@@ -9,11 +9,7 @@ class UsersController < ApplicationController
   post "/signup" do
     new_user = User.new(username: params[:username], password: params[:password])
 
-    unique_username = User.all.all? do |user|
-       new_user.username != user.username
-    end
-
-    if unique_username && new_user.save
+    if new_user.save
       redirect "/books/by-user/#{new_user.username}"
     else
       flash[:message] = "Invalid Username and/or Password"

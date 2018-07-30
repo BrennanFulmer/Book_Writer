@@ -24,7 +24,29 @@ class BooksController < ApplicationController
   end
 
   get "/books/new" do
-    erb :"/books/new"
+    if logged_in?
+      erb :"/books/new"
+    else
+      flash[:message] = "You Must Be Signed In To Create A Book"
+      redirect "/"
+    end
+  end
+
+  post "/books" do
+    @new_book = Book.new(title: params[:book][:title], user_id: session[:user_id])
+
+    if @new_book.save
+      redirect "/books/#{@new_book.slug}"
+    else
+      flash[:message] = "Book Title '#{@new_book.title}' Is Invalid"
+      redirect "/books/new"
+    end
+  end
+
+  get "/books/:slug" do
+    binding.pry
+    @book = Book.find_by_slug(params[:slug])
+    erb :"/books/show"
   end
 
 end
