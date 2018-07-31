@@ -1,6 +1,12 @@
 
 <h1> <%= @book.title %> </h1>
 
+<% if flash.has?(:message) %>
+  <div id="show book error">
+    <h2> <%= flash[:message] %> </h2>
+  </div>
+<% end %>
+
 <% if !@book.chapters.empty? %>
   <ul>
     <% @book.chapters.each do |chapter| %>

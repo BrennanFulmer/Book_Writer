@@ -1,0 +1,40 @@
+
+<h1> Editing '<%= @book.title %>' </h1>
+
+<p>
+  Book titles must be unique and contain 5 to 64 characters.
+  <br>
+  Valid characters are any letter (either case), number, or the punctuation characters below.
+  <br>
+  ! @ $ % ^ * + _
+</p>
+
+<form action="/books/<%= @book.id %>" method="post">
+  <fieldset>
+    <legend> Change Book: </legend>
+
+    <% if flash.has?(:message) %>
+      <div id="edit book error">
+        <h2> <%= flash[:message] %> </h2>
+      </div>
+    <% end %>
+
+    <br>
+    <label for="title"> Books New Title: </label>
+    <br>
+    <input type="text" name="title" id="title" maxlength="64" pattern="[a-zA-Z0-9!@$%^*+_]{5,64}" required>
+    <br>
+    <br>
+    <br>
+    <input type="submit" value="Modify Book">
+  </fieldset>
+</form>
+
+<br>
+<a href="/books/by-user/<%= @user.slug %>"> Your Books </a>
+<br>
+<br>
+<a href="/books/<%= @book.slug %>/delete"> Delete This Book </a>
+<br>
+<br>
+<a href="/logout"> Logout </a>
