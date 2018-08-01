@@ -28,8 +28,11 @@
   <a href="/chapters/reorder"> Reorder A Books Chapters </a>
   <br>
   <br>
-  <a href="/books/<%= @book.slug %>/delete"> Delete This Book </a>
-  <br>
+  <form action="/books/<%= @book.id %>/delete" method="post">
+    <input type="hidden" name="_method" value="delete">
+
+    <input type="submit" value="delete book">
+  </form>
 <% end %>
 
 <% if @user %>

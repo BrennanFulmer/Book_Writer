@@ -34,7 +34,10 @@
 <a href="/books/by-user/<%= @user.slug %>"> Your Books </a>
 <br>
 <br>
-<a href="/books/<%= @book.slug %>/delete"> Delete This Book </a>
-<br>
+<form action="/books/<%= @book.id %>/delete" method="post">
+  <input type="hidden" name="_method" value="delete">
+
+  <input type="submit" value="delete book">
+</form>
 <br>
 <a href="/logout"> Logout </a>

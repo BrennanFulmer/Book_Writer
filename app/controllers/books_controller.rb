@@ -77,4 +77,19 @@ class BooksController < ApplicationController
     redirect "books/#{@book.slug}"
   end
 
+  delete "/books/:id/delete" do
+    # TODO handle associated chapter deletion
+    @book = Book.find_by(id: params[:id])
+    @user = current_user
+    @your_book = @user.id == @book.user_id if @user
+
+    if @your_book
+      @book.delete
+      erb :"/books/delete"
+    else
+      flash[:message] = "You Can't Delete A Book That's Not Yours"
+      redirect "/books"
+    end
+  end
+
 end
