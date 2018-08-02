@@ -9,7 +9,12 @@ class ApplicationController < Sinatra::Base
   end
 
   get "/" do
-    erb :index
+    if logged_in?
+      flash[:message] = "Your Already Logged In"
+      redirect "/books"
+    else
+      erb :index
+    end
   end
 
   helpers do

@@ -5,6 +5,12 @@
   <h1> Books by <%= @user.username %> </h1>
 <% end %>
 
+<% if flash.has?(:message) %>
+  <div id="books by user error">
+    <h2> <%= flash[:message] %> </h2>
+  </div>
+<% end %>
+
 <% if !@user.books.empty? %>
   <% if @authenticated %>
     <h3> Your Books </h3>

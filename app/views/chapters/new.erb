@@ -1,0 +1,52 @@
+
+<h1> Add A Chapter To <%= @book.title %> </h1>
+
+<p>
+  Chapter names must contain 5 to 64 characters.
+  <br>
+  Valid characters are any letter (either case), number, or the punctuation characters below.
+  <br>
+  ! @ $ % ^ * + _
+</p>
+
+<% if !@book.chapters.empty? %>
+  <h3> Existing Chapters </h3>
+
+  <ul>
+    <% @book.chapters.each do |chapter| %>
+      <li> <a href="/<%= @book.slug %>/<%= chapter.ordinal %>"></a> <%= chapter.ordinal %>. <%= chapter.name %> </li>
+    <% end %>
+  </ul>
+<% end %>
+
+<form action="/chapters" method="post">
+  <fieldset>
+    <legend> New Chapter: </legend>
+
+    <% if flash.has?(:message) %>
+      <div id="new chapter error">
+        <h2> <%= flash[:message] %> </h2>
+      </div>
+    <% end %>
+
+    <br>
+    <label for="chapter_name"> Chapter Name: </label>
+    <br>
+    <input type="text" name="chapter[name]" id="chapter_name" maxlength="64" pattern="[a-zA-Z0-9!@$%^*+_]{5,64}" required>
+    <br>
+
+    <br>
+    <label for="chapter_ordinal"> Chapters Number: </label>
+    <br>
+    <input type="text" name="chapter[ordinal]" id="chapter_ordinal" maxlength="3" pattern="^[1-9][0-9]*" required>
+    <br>
+
+    <input type="hidden" name="chapter[book_id]" value="<%= @book.id %>">
+
+    <br>
+    <br>
+    <input type="submit" value="New Chapter">
+  </fieldset>
+</form>
+
+<% # TODO add links %>

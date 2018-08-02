@@ -22,6 +22,8 @@ class BooksController < ApplicationController
   end
 
   get "/books/new" do
+    # TODO block creation of a book named books or new
+
     if logged_in?
       @user = current_user
       erb :"/books/new"
@@ -79,6 +81,7 @@ class BooksController < ApplicationController
 
   delete "/books/:id/delete" do
     # TODO handle associated chapter deletion
+
     @book = Book.find_by(id: params[:id])
     @user = current_user
     @your_book = @user.id == @book.user_id if @user
@@ -90,6 +93,13 @@ class BooksController < ApplicationController
       flash[:message] = "You Can't Delete A Book That's Not Yours"
       redirect "/books"
     end
+  end
+
+  get "/books/:title/reorder" do
+=begin
+  TODO form to reorder chapters by entering new ordinal, with seperate
+  checklist of chapters
+=end
   end
 
 end
