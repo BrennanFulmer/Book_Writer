@@ -12,10 +12,4 @@ class Book < ActiveRecord::Base
     title.downcase.strip.gsub(/_/, ' ').gsub(/\p{P}/, '').gsub(/\W+/, '-')
   end
 
-  def unique_ordinal?(new_chapter)
-    chapters.all? do |chapter|
-      chapter.ordinal != new_chapter.ordinal
-    end
-  end
-
 end

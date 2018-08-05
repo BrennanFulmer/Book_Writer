@@ -33,7 +33,7 @@ class ChaptersController < ApplicationController
     @chapter = Chapter.new(params[:chapter])
     @book = Book.find_by(id: params[:chapter][:book_id])
 
-    if @book.unique_ordinal?(@chapter) && @chapter.save
+    if Chapter.unique_ordinal?(@chapter) && @chapter.save
       redirect "/#{@book.slug}/#{@chapter.ordinal}"
     else
       flash[:message] = "Invalid Chapter Title Or Number"
@@ -44,17 +44,45 @@ class ChaptersController < ApplicationController
   get "/:book_title/:chapter_ordinal" do
     @book = Book.find_by_slug(params[:book_title])
     @chapter = Chapter.find_by(ordinal: params[:chapter_ordinal])
-
     erb :"/chapters/show"
   end
 
   get "/books/:title/chapters/:ordinal/write" do
+    @book = Book.find_by_slug(params[:title])
+    @chapter = Chapter.find_by(ordinal: params[:ordinal])
+    erb :"/chapters/write"
+  end
+
+  post "/books/:title/chapters/:id/write" do
+# TODO needs to block submission if empty
+
+    @book = Book.find_by_slug(params[:title])
+    @chapter = Chapter.find(params[:id])
+
+    if @chapter.content
+      @chapter.content += "\n\t#{params[:content]}"
+    else
+      @chapter.content = params[:content]
+    end
+
+    @chapter.save
+    redirect "/#{@book.slug}/#{@chapter.ordinal}"
   end
 
   get "/books/:title/chapters/:ordinal/edit" do
+    @book = Book.find_by_slug(params[:title])
+    @chapter = Chapter.find_by(ordinal: params[:ordinal])
+    erb :"/chapters/edit"
   end
 
-  get "/:title/:ordinal/delete" do
+  post "/books/:title/chapters/:id/edit" do
+# TODO needs to block submission if empty
+  end
+
+  get "/books/:title/chapters/:ordinal/delete" do
+  end
+
+  delete "/books/:title/chapters/:id/delete" do
   end
 
 end
