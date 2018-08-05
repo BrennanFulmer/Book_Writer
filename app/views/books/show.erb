@@ -9,8 +9,8 @@
 
 <% if !@book.chapters.empty? %>
   <ul>
-    <% @book.chapters.each do |chapter| %>
-      <li> <a href="/<%= @book.slug %>/<%= chapter.ordinal %>"></a> <%= chapter.ordinal %>. <%= chapter.name %> </li>
+    <% @book.chapters.order(:ordinal).each do |chapter| %>
+      <li> <a href="/<%= @book.slug %>/<%= chapter.ordinal %>"> <%= chapter.ordinal %>. <%= chapter.name %> </a> </li>
     <% end %>
   </ul>
 <% else %>

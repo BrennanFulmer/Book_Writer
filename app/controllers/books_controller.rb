@@ -2,6 +2,12 @@
 class BooksController < ApplicationController
   use Rack::Flash
 
+=begin
+  before "/books*" do
+    # something
+  end
+=end
+
   get "/books" do
     @books = Book.all
     @user = current_user
@@ -35,6 +41,8 @@ class BooksController < ApplicationController
 
   post "/books" do
     @new_book = Book.new(title: params[:title], user_id: session[:user_id])
+
+    # @new_book.errors.full_messages
 
     if @new_book.save
       redirect "/books/#{@new_book.slug}"

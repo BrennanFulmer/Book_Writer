@@ -1,0 +1,12 @@
+
+<h1> <%= @book.title %> </h1>
+
+<h2> <%= @chapter.ordinal %>.  <%= @chapter.name %> </h2>
+
+<% if @chapter.content %>
+  <p> <%= @chapter.content %> </p>
+<% else %>
+  <p> No Content Found </p>
+<% end %>
+
+<!-- add links -->

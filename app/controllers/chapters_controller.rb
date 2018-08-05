@@ -2,6 +2,12 @@
 class ChaptersController < ApplicationController
   use Rack::Flash
 
+=begin
+  before "/chapters*" do
+    # something
+  end
+=end
+
   get "/:book_title/new_chapter" do
     @book = Book.find_by_slug(params[:book_title])
     @user = current_user
@@ -24,8 +30,8 @@ class ChaptersController < ApplicationController
   end
 
   post "/chapters" do
-    @book = Book.find_by(id: params[:chapter][:book_id])
     @chapter = Chapter.new(params[:chapter])
+    @book = Book.find_by(id: params[:chapter][:book_id])
 
     if @book.unique_ordinal?(@chapter) && @chapter.save
       redirect "/#{@book.slug}/#{@chapter.ordinal}"
@@ -36,16 +42,19 @@ class ChaptersController < ApplicationController
   end
 
   get "/:book_title/:chapter_ordinal" do
-    
+    @book = Book.find_by_slug(params[:book_title])
+    @chapter = Chapter.find_by(ordinal: params[:chapter_ordinal])
+
+    erb :"/chapters/show"
   end
 
-  get "/:book_title/:chapter_ordinal/write" do
+  get "/books/:title/chapters/:ordinal/write" do
   end
 
-  get "/:book_title/:chapter_ordinal/edit" do
+  get "/books/:title/chapters/:ordinal/edit" do
   end
 
-  get "/:book_title/:chapter_ordinal/delete" do
+  get "/:title/:ordinal/delete" do
   end
 
 end
