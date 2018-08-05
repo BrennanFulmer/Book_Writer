@@ -1,7 +1,7 @@
 
-<h1> <%= @book.title %> </h1>
+<h1> Book: <%= @book.title %> </h1>
 
-<h2> <%= @chapter.ordinal %>.  <%= @chapter.name %> </h2>
+<h2> Chapter <%= @chapter.ordinal %>:  <%= @chapter.name %> </h2>
 
 <% if @chapter.content %>
   <p> <%= @chapter.content %> </p>

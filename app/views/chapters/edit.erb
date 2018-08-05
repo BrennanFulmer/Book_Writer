@@ -1,13 +1,40 @@
 
-<h1> <%= @book.title %> </h1>
+<h1> Book: <%= @book.title %> </h1>
 
-<h2> <%= @chapter.ordinal %>.  <%= @chapter.name %> </h2>
+<h2> Chapter <%= @chapter.ordinal %>:  <%= @chapter.name %> </h2>
 
-<h3> Existing Content: </h3>
-<% if @chapter.content %>
-  <p> <%= @chapter.content %> </p>
-<% else %>
-  <p> No Content Found </p>
-<% end %>
+<p>
+  Chapter names must contain 5 to 64 characters.
+  <br>
+  Valid characters are any letter (either case), number, or the punctuation characters below.
+  <br>
+  ! @ $ % ^ * + _
+  <br>
+  Chapter numbers cannot be longer than 3 characters and can only contain numbers.
+</p>
+
+<form action="/books/<%= @book.id %>/chapters/<%= @chapter.id %>/edit" method="post">
+  <fieldset>
+    <legend> Edit Chapter: </legend>
+
+    <br>
+    <label for="chapter_name"> New Chapter Name: </label>
+    <br>
+    <input type="text" name="chapter[name]" id="chapter_name" maxlength="64" pattern="[a-zA-Z0-9!@$%^*+_]{5,64}" required>
+    <br>
+
+    <br>
+    <label for="chapter_ordinal"> Chapters New Number: </label>
+    <br>
+    <input type="text" name="chapter[ordinal]" id="chapter_ordinal" maxlength="3" pattern="^[1-9][0-9]*" required>
+    <br>
+
+    <input type="hidden" name="chapter[book_id]" value="<%= @book.id %>">
+
+    <br>
+    <br>
+    <input type="submit" value="Edit Chapter">
+  </fieldset>
+</form>
 
 <!-- add links -->

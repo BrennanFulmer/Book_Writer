@@ -3,7 +3,7 @@
 
 <h2> Chapter <%= @chapter.ordinal %>:  <%= @chapter.name %> </h2>
 
-<form action="/books/<%= @book.slug %>/chapters/<%= @chapter.id %>/write" method="post">
+<form action="/books/<%= @book.id %>/chapters/<%= @chapter.id %>/write" method="post">
   <label for="content"> Write Your Chapter Here: </label>
   <br>
   <br>

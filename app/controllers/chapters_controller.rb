@@ -53,11 +53,10 @@ class ChaptersController < ApplicationController
     erb :"/chapters/write"
   end
 
-  post "/books/:title/chapters/:id/write" do
+  post "/books/:b_id/chapters/:c_id/write" do
 # TODO needs to block submission if empty
-
-    @book = Book.find_by_slug(params[:title])
-    @chapter = Chapter.find(params[:id])
+    @book = Book.find(params[:b_id])
+    @chapter = Chapter.find(params[:c_id])
 
     if @chapter.content
       @chapter.content += "\n\t#{params[:content]}"
@@ -75,14 +74,20 @@ class ChaptersController < ApplicationController
     erb :"/chapters/edit"
   end
 
-  post "/books/:title/chapters/:id/edit" do
+  post "/books/:b_id/chapters/:c_id/edit" do
 # TODO needs to block submission if empty
+    @book = Book.find(params[:b_id])
+    @chapter = Chapter.find(params[:c_id])
+    @chapter.update(params[:chapter])
+    @chapter.save
+    redirect "/#{@book.slug}/#{@chapter.ordinal}"
   end
 
-  get "/books/:title/chapters/:ordinal/delete" do
+  get "/books/:title/chapters/:ordinal/modify-content" do
+    
   end
 
-  delete "/books/:title/chapters/:id/delete" do
+  delete "/books/:b_id/chapters/:c_id/delete" do
   end
 
 end
