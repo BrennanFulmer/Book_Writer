@@ -1,0 +1,16 @@
+
+<h1> Book: <%= @book.title %> </h1>
+
+<h2> Chapter <%= @chapter.ordinal %>:  <%= @chapter.name %> </h2>
+
+<form action="/books/<%= @book.slug %>/chapters/<%= @chapter.id %>/write" method="post">
+  <label for="content"> Write Your Chapter Here: </label>
+  <br>
+  <br>
+  <textarea name="content" id="content" rows="4" placeholder="The corner in the bottom right allows you to resize this writing area" required></textarea>
+  <br>
+  <br>
+  <input type="submit" value="Write Chapter">
+</form>
+
+<!-- add links -->
