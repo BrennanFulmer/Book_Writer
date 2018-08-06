@@ -63,7 +63,6 @@ class ChaptersController < ApplicationController
     else
       @chapter.content = params[:content]
     end
-
     @chapter.save
     redirect "/#{@book.slug}/#{@chapter.ordinal}"
   end
@@ -83,11 +82,26 @@ class ChaptersController < ApplicationController
     redirect "/#{@book.slug}/#{@chapter.ordinal}"
   end
 
-  get "/books/:title/chapters/:ordinal/modify-content" do
-    
+  get "/books/:title/chapters/:ordinal/modify" do
+# TODO should redirect if there is no content
+    @book = Book.find_by_slug(params[:title])
+    @chapter = Chapter.find_by(ordinal: params[:ordinal])
+    erb :"/chapters/modify"
+  end
+
+  post "/books/:b_id/chapters/:c_id/modify" do
+# TODO needs to block submission if empty
+    @book = Book.find(params[:b_id])
+    @chapter = Chapter.find(params[:c_id])
+    @chapter.content = params[:content]
+    @chapter.save
+    redirect "/#{@book.slug}/#{@chapter.ordinal}"
   end
 
   delete "/books/:b_id/chapters/:c_id/delete" do
+    @chapter = Chapter.find(params[:c_id])
+    @chapter.delete
+    erb :"/chapters/delete"
   end
 
 end

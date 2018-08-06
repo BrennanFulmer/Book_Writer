@@ -1,0 +1,26 @@
+
+<h1> Book: <%= @book.title %> </h1>
+
+<h2> Chapter <%= @chapter.ordinal %>:  <%= @chapter.name %> </h2>
+
+<h3> Chapters Current Content: </h3>
+
+<p> <%= @chapter.content %> </p>
+
+<form action="/books/<%= @book.id %>/chapters/<%= @chapter.id %>/modify" method="post">
+  <label for="content"> Write Your Chapter Here: </label>
+  <br>
+  <br>
+  <textarea name="content" id="content" rows="5" placeholder="Copy and paste any existing content you want to keep here, otherwise write your changes/modifications" required></textarea>
+  <br>
+  <br>
+  <input type="submit" value="Write Chapter">
+</form>
+
+<!-- add links -->
+<br>
+<form action="/books/<%= @book.id %>/chapters/<%= @chapter.id %>/delete" method="post">
+  <input type="hidden" name="_method" value="delete">
+
+  <input type="submit" value="delete chapter">
+</form>
