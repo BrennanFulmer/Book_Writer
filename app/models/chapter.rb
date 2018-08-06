@@ -4,16 +4,20 @@ class Chapter < ActiveRecord::Base
 
   belongs_to :book
 
-  validates :name, :presence => true
-  validates :ordinal, :presence => true
-  validates :book_id, :presence => true
+  validates :name, :presence => true, length: { in: 5..64 },
+  format: { with: /\A[a-z0-9][a-z0-9 ]{4,63}\Z/i }
+
+  validates :ordinal, :presence => true, numericality: { only_integer: true },
+  length: { in: 1..2 }, format: { with: /\A[1-9][0-9]{0,1}\Z/ }
+
+  validates :book_id, :presence => true, numericality: { only_integer: true }
 
   def slug
-    name.downcase.strip.gsub(/_/, ' ').gsub(/\p{P}/, '').gsub(/\W+/, '-')
+    name.downcase.strip.gsub(/\p{P}/, '').gsub(/\W+/, '-')
   end
 
   def self.unique_ordinal?(new_chapter)
-    all? do |chapter|
+    all.all? do |chapter|
       chapter.ordinal != new_chapter.ordinal
     end
   end

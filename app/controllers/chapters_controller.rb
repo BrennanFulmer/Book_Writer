@@ -32,7 +32,7 @@ class ChaptersController < ApplicationController
   post "/chapters" do
     @chapter = Chapter.new(params[:chapter])
     @book = Book.find_by(id: params[:chapter][:book_id])
-
+    
     if Chapter.unique_ordinal?(@chapter) && @chapter.save
       redirect "/#{@book.slug}/#{@chapter.ordinal}"
     else

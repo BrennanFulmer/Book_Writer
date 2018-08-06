@@ -4,9 +4,9 @@
 <p>
   Book titles must be unique and contain 5 to 64 characters.
   <br>
-  Valid characters are any letter (either case), number, or the punctuation characters below.
+  Valid characters are any letter (either case), number, or spaces.
   <br>
-  ! @ $ % ^ * + _
+  However you can't start with a space.
 </p>
 
 <form action="/books/<%= @book.id %>" method="post">
@@ -22,7 +22,7 @@
     <br>
     <label for="title"> Books New Title: </label>
     <br>
-    <input type="text" name="title" id="title" maxlength="64" pattern="[a-zA-Z0-9!@$%^*+_]{5,64}" required>
+    <input type="text" name="title" id="title" maxlength="64" pattern="\A[a-zA-Z0-9][a-zA-Z0-9 ]{4,63}\Z" required>
     <br>
     <br>
     <br>

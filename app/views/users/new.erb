@@ -6,9 +6,9 @@
   <br>
   Passwords must contain between 8 and 64 characters.
   <br>
-  Valid characters are any letter (either case), number, or the punctuation characters below.
+  Valid characters are any letter (either case), number, or spaces.
   <br>
-  ! @ $ % ^ * + _
+  However you can't start with a space.
 </p>
 
 <form action="/signup" method="POST">
@@ -24,13 +24,13 @@
     <br>
     <label for="username"> Username: </label>
     <br>
-    <input type="text" name="user[username]" id="username" maxlength="32" pattern="[a-zA-Z0-9!@$%^*+_]{5,32}" required>
+    <input type="text" name="user[username]" id="username" maxlength="32" pattern="\A[a-zA-Z0-9][a-zA-Z0-9 ]{4,31}\Z" required>
     <br>
 
     <br>
     <label for="password"> Password: </label>
     <br>
-    <input type="password" name="user[password]" id="password" maxlength="64" pattern="[a-zA-Z0-9!@$%^*+_]{8,64}" required>
+    <input type="password" name="user[password]" id="password" maxlength="64" pattern="\A[a-zA-Z0-9][a-zA-Z0-9 ]{4,63}\Z" required>
     <br>
 
     <br>
