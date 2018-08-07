@@ -2,16 +2,13 @@
 class ChaptersController < ApplicationController
   use Rack::Flash
 
-=begin
-  before "/chapters*" do
-    # something
-  end
-=end
-
-  get "/:book_title/new_chapter" do
-    @book = Book.find_by_slug(params[:book_title])
+  before "/books*" do
     @user = current_user
-    @your_book = @user.id == @book.user_id if @user
+  end
+
+  get "/books/:title/chapters/new" do
+    @book = Book.find_by_slug(params[:title])
+    @your_book = @user.id == @book.user_id if @user && @book
 
     if @book && @your_book
       erb :"/chapters/new"
@@ -29,21 +26,21 @@ class ChaptersController < ApplicationController
     end
   end
 
-  post "/chapters" do
+  post "/books/:id/chapters" do
     @chapter = Chapter.new(params[:chapter])
-    @book = Book.find_by(id: params[:chapter][:book_id])
+    @book = Book.find(params[:id])
 
     if Chapter.unique_ordinal?(@chapter) && @chapter.save
       redirect "/#{@book.slug}/#{@chapter.ordinal}"
     else
       flash[:message] = "Invalid Chapter Title Or Number"
-      redirect "/#{@book.slug}/new_chapter"
+      redirect "/books/#{@book.slug}/chapters/new"
     end
   end
 
-  get "/:book_title/:chapter_ordinal" do
-    @book = Book.find_by_slug(params[:book_title])
-    @chapter = Chapter.find_by(ordinal: params[:chapter_ordinal])
+  get "/books/:title/chapters/:ordinal" do
+    @book = Book.find_by_slug(params[:title])
+    @chapter = Chapter.find_by(ordinal: params[:ordinal])
     erb :"/chapters/show"
   end
 
@@ -67,13 +64,13 @@ class ChaptersController < ApplicationController
     redirect "/#{@book.slug}/#{@chapter.ordinal}"
   end
 
-  get "/books/:title/chapters/:ordinal/edit" do
+  get "/books/:title/chapters/:ordinal" do
     @book = Book.find_by_slug(params[:title])
     @chapter = Chapter.find_by(ordinal: params[:ordinal])
     erb :"/chapters/edit"
   end
 
-  post "/books/:b_id/chapters/:c_id/edit" do
+  post "/books/:b_id/chapters/:c_id" do
 # TODO needs to block submission if empty
     @book = Book.find(params[:b_id])
     @chapter = Chapter.find(params[:c_id])
@@ -82,14 +79,14 @@ class ChaptersController < ApplicationController
     redirect "/#{@book.slug}/#{@chapter.ordinal}"
   end
 
-  get "/books/:title/chapters/:ordinal/modify" do
+  get "/books/:title/chapters/:ordinal/modify_content" do
 # TODO should redirect if there is no content
     @book = Book.find_by_slug(params[:title])
     @chapter = Chapter.find_by(ordinal: params[:ordinal])
-    erb :"/chapters/modify"
+    erb :"/chapters/modify_content"
   end
 
-  post "/books/:b_id/chapters/:c_id/modify" do
+  post "/books/:b_id/chapters/:c_id/modify_content" do
 # TODO needs to block submission if empty
     @book = Book.find(params[:b_id])
     @chapter = Chapter.find(params[:c_id])
@@ -98,7 +95,7 @@ class ChaptersController < ApplicationController
     redirect "/#{@book.slug}/#{@chapter.ordinal}"
   end
 
-  delete "/books/:b_id/chapters/:c_id/delete" do
+  delete "/books/:b_id/chapters/:c_id" do
     @chapter = Chapter.find(params[:c_id])
     @chapter.delete
     erb :"/chapters/delete"

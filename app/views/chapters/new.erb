@@ -19,7 +19,7 @@
   </ul>
 <% end %>
 
-<form action="/chapters" method="post">
+<form action="/books/<%= @book.id %>/chapters" method="post">
   <fieldset>
     <legend> New Chapter: </legend>
 

@@ -9,7 +9,7 @@ class ApplicationController < Sinatra::Base
   end
 
   get "/" do
-    if logged_in?
+    if current_user
       flash[:message] = "Your Already Logged In"
       redirect "/books"
     else
@@ -18,10 +18,6 @@ class ApplicationController < Sinatra::Base
   end
 
   helpers do
-    def logged_in?
-      session[:user_id] != nil
-    end
-
     def current_user
       if session[:user_id]
         User.find(session[:user_id])

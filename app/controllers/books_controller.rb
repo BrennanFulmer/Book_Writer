@@ -2,23 +2,18 @@
 class BooksController < ApplicationController
   use Rack::Flash
 
-=begin
   before "/books*" do
-    # something
+    @user = current_user
   end
-=end
 
   get "/books" do
     @books = Book.all
-    @user = current_user
     erb :"/books/index"
   end
 
   get "/books/new" do
-    # TODO block creation of a book named books or new
-
-    if logged_in?
-      @user = current_user
+# TODO block creation of a book named books or new
+    if @user
       erb :"/books/new"
     else
       flash[:message] = "You Must Be Signed In To Create A Book"
@@ -27,9 +22,8 @@ class BooksController < ApplicationController
   end
 
   post "/books" do
+# TODO syntax for actually getting error - @new_book.errors.full_messages
     @new_book = Book.new(title: params[:title], user_id: session[:user_id])
-
-    # @new_book.errors.full_messages
 
     if @new_book.save
       redirect "/books/#{@new_book.slug}"
@@ -43,7 +37,6 @@ class BooksController < ApplicationController
     @book = Book.find_by_slug(params[:title])
 
     if @book
-      @user = current_user
       @your_book = @user.id == @book.user_id if @user
       erb :"/books/show"
     else
@@ -54,8 +47,7 @@ class BooksController < ApplicationController
 
   get "/books/:title/edit" do
     @book = Book.find_by_slug(params[:title])
-    @user = current_user
-    @your_book = @user.id == @book.user_id if @user
+    @your_book = @user.id == @book.user_id if @user && @book
 
     if @book && @your_book
       erb :"/books/edit"
@@ -69,15 +61,14 @@ class BooksController < ApplicationController
   end
 
   post "/books/:id" do
-    @book = Book.find_by(id: params[:id])
+    @book = Book.find(params[:id])
     @book.update(title: params[:title])
     redirect "books/#{@book.slug}"
   end
 
-  delete "/books/:id/delete" do
+  delete "/books/:id" do
 # TODO handle associated chapter deletion
-    @book = Book.find_by(id: params[:id])
-    @user = current_user
+    @book = Book.find(params[:id])
     @your_book = @user.id == @book.user_id if @user
 
     if @your_book
@@ -89,15 +80,15 @@ class BooksController < ApplicationController
     end
   end
 
-  get "/users/:username/books" do
-    @user = User.find_by_slug(params[:username])
+  get "/users/:author/books" do
+    @author = User.find_by_slug(params[:author])
+    @user = current_user
 
-    if @user
-      @authenticated = logged_in?
-      @your_books = @user == current_user
+    if @author
+      @your_books = @author == @user
       erb :"/books/users_books"
     else
-      flash[:message] = "Unable To Show Books By #{params[:username]}"
+      flash[:message] = "Unable To Show Books By #{params[:author]}"
       redirect "/books"
     end
   end
