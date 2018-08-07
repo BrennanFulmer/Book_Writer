@@ -1,0 +1,29 @@
+
+<h1> Reorder <%= @book.title %>'s Chapters</h1>
+
+<h2> Existing Chapter Order: </h2>
+
+<form>
+  <fieldset>
+    <legend> Use These Checkboxes To Keep Track Of Chapters As You Reorder: </legend>
+      <% @book.chapters.order(:ordinal).each do |chapter| %>
+        <label> <%= chapter.ordinal %>. <%= chapter.name %> </label>
+        <input type="checkbox"> <br>
+      <% end %>
+  </fieldset>
+</form>
+<br>
+
+<form action="/books/<%= @book.id %>/chapters/reorder" method="post">
+  <fieldset>
+    <legend> Select A New Chapter Number: </legend>
+      <% @book.chapters.order(:ordinal).each do |chapter| %>
+        <br>
+        <label> <%= chapter.name %> </label>
+        <input type="number" name="chapters[<%= chapter.name %>][]" min="1" max="99" pattern="\A[1-9][0-9]{0,1}\Z" required>
+        <br>
+      <% end %>
+      <br>
+      <input type="submit" value="Reorder Chapters">
+  </fieldset>
+</form>

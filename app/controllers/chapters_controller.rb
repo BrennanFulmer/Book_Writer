@@ -21,7 +21,7 @@ class ChaptersController < ApplicationController
     else
       if @user
         flash[:message] = "You Can't Add Chapters To Someone Elses Books"
-        redirect "/books/by-user/#{@user.username}"
+        redirect "/users/#{@user.username}/books"
       else
         flash[:message] = "You Have To Be Signed In To Add Chapters"
         redirect "/"
@@ -32,7 +32,7 @@ class ChaptersController < ApplicationController
   post "/chapters" do
     @chapter = Chapter.new(params[:chapter])
     @book = Book.find_by(id: params[:chapter][:book_id])
-    
+
     if Chapter.unique_ordinal?(@chapter) && @chapter.save
       redirect "/#{@book.slug}/#{@chapter.ordinal}"
     else
@@ -102,6 +102,28 @@ class ChaptersController < ApplicationController
     @chapter = Chapter.find(params[:c_id])
     @chapter.delete
     erb :"/chapters/delete"
+  end
+
+  get "/books/:title/chapters/reorder" do
+=begin
+  TODO redirect if book doesn't exist, has no chapters, not logged in,
+   not your book
+=end
+    @book = Book.find_by_slug(params[:title])
+    erb :"/books/reorder"
+  end
+
+  post "/books/:id/chapters/reorder" do
+# TODO handle duplicate ordinal submission, or lack of ordinal input
+    @book = Book.find(params[:id])
+    new_chapter_order = params[:chapters].to_a
+
+    new_chapter_order.each do |chapter|
+      current_chapter = Chapter.find_by(name: chapter[0])
+      current_chapter.ordinal = chapter[1][0]
+      current_chapter.save
+    end
+    redirect "books/#{@book.slug}"
   end
 
 end

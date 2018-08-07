@@ -31,13 +31,13 @@
 </form>
 
 <br>
-<a href="/books/by-user/<%= @user.slug %>"> Your Books </a>
+<a href="/users/<%= @user.slug %>/books"> Your Books </a>
 <br>
 <br>
 <a href="/<%= @book.slug %>/new_chapter"> Create A New Chapter </a>
 <br>
 <br>
-<a href="/books/<%= @book.slug %>/reorder"> Reorder A Books Chapters </a>
+<a href="/books/<%= @book.slug %>/chapters/reorder"> Reorder A Books Chapters </a>
 <br>
 <br>
 <form action="/books/<%= @book.id %>/delete" method="post">

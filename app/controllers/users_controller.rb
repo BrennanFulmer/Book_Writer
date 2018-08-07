@@ -11,7 +11,7 @@ class UsersController < ApplicationController
 
     if new_user.save
       session[:user_id] = new_user.id
-      redirect "/books/by-user/#{new_user.username}"
+      redirect "/users/#{new_user.username}/books"
     else
       flash[:message] = "Invalid Username and/or Password"
       redirect "/signup"
@@ -23,7 +23,7 @@ class UsersController < ApplicationController
 
     if user && user.authenticate(params[:password])
       session[:user_id] = user.id
-      redirect "/books/by-user/#{user.username}"
+      redirect "/users/#{user.username}/books"
     else
       flash[:message] = "Invalid Username and/or Password"
       redirect "/"
