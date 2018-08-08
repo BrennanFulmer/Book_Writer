@@ -121,6 +121,7 @@ class ChaptersController < ApplicationController
     @book = Book.find_by_slug(params[:title])
     @chapter = Chapter.find_by(ordinal: params[:ordinal])
     @your_book = @user.id == @book.user_id if @user && @book
+    @author = User.find(@book.user_id) unless @your_book
     erb :"/chapters/show"
   end
 

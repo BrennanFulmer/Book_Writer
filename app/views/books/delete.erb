@@ -1,11 +1,11 @@
 
-<h1> '<%= @book.title %>' Has Been Deleted </h1>
+<h1> The Book '<%= @book.title %>' Has Been Deleted </h1>
 
-<% if !@book.chapters.empty? %>
+<% if !@chapters.empty? %>
   <h3> Along With All Its Chapters: </h3>
 
   <ul>
-    <% @book.chapters.order(:ordinal).each do |chapter| %>
+    <% @chapters.each do |chapter| %>
       <li> <%= chapter.ordinal %>. <%= chapter.name %> </li>
       <p> <%= chapter.content %> </p>
     <% end %>

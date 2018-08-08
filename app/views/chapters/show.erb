@@ -3,11 +3,19 @@
 
 <h2> Chapter <%= @chapter.ordinal %>:  <%= @chapter.name %> </h2>
 
+<% if @author %>
+  <h3> Written By: <%= @author.username %> </h3>
+<% end %>
+
 <% if @chapter.content %>
   <p> <%= @chapter.content %> </p>
 <% else %>
   <p> No Content Found </p>
 <% end %>
+
+<br>
+<a href="/books/<%= @book.slug %>"> View This Books Chapters </a>
+<br>
 
 <% if @your_book %>
   <br>

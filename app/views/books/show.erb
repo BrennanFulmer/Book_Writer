@@ -1,5 +1,9 @@
 
-<h1> <%= @book.title %> </h1>
+<h1> Book: <%= @book.title %> </h1>
+
+<% if @author %>
+  <h3> Written By: <%= @author.username %> </h3>
+<% end %>
 
 <% if flash.has?(:message) %>
   <div id="show book error">

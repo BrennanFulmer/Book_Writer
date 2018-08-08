@@ -38,6 +38,7 @@ class BooksController < ApplicationController
 
     if @book
       @your_book = @user.id == @book.user_id if @user
+      @author = User.find(@book.user_id) unless @your_book
       erb :"/books/show"
     else
       flash[:message] = "No '#{params[:title]}' Book Found"
@@ -67,11 +68,16 @@ class BooksController < ApplicationController
   end
 
   delete "/books/:id" do
-# TODO handle associated chapter deletion
     @book = Book.find(params[:id])
     @your_book = @user.id == @book.user_id if @user
 
     if @your_book
+      if !@book.chapters.empty?
+        @chapters = @book.chapters
+        @book.chapters.each do |chapter|
+          chapter.delete
+        end
+      end
       @book.delete
       erb :"/books/delete"
     else
