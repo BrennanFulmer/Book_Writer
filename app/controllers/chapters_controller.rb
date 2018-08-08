@@ -31,20 +31,15 @@ class ChaptersController < ApplicationController
     @book = Book.find(params[:id])
 
     if Chapter.unique_ordinal?(@chapter) && @chapter.save
-      redirect "/#{@book.slug}/#{@chapter.ordinal}"
+      redirect "/books/#{@book.slug}/chapters/#{@chapter.ordinal}"
     else
       flash[:message] = "Invalid Chapter Title Or Number"
       redirect "/books/#{@book.slug}/chapters/new"
     end
   end
 
-  get "/books/:title/chapters/:ordinal" do
-    @book = Book.find_by_slug(params[:title])
-    @chapter = Chapter.find_by(ordinal: params[:ordinal])
-    erb :"/chapters/show"
-  end
-
   get "/books/:title/chapters/:ordinal/write" do
+# TODO redirect if not your chapter
     @book = Book.find_by_slug(params[:title])
     @chapter = Chapter.find_by(ordinal: params[:ordinal])
     erb :"/chapters/write"
@@ -60,23 +55,22 @@ class ChaptersController < ApplicationController
     else
       @chapter.content = params[:content]
     end
-    @chapter.save
-    redirect "/#{@book.slug}/#{@chapter.ordinal}"
+    redirect "/books/#{@book.slug}/chapters/#{@chapter.ordinal}"
   end
 
-  get "/books/:title/chapters/:ordinal" do
+  get "/books/:title/chapters/:ordinal/edit" do
+# TODO redirect if not your chapter
     @book = Book.find_by_slug(params[:title])
     @chapter = Chapter.find_by(ordinal: params[:ordinal])
     erb :"/chapters/edit"
   end
 
-  post "/books/:b_id/chapters/:c_id" do
+  post "/books/:b_id/chapters/:c_id/edit" do
 # TODO needs to block submission if empty
     @book = Book.find(params[:b_id])
     @chapter = Chapter.find(params[:c_id])
     @chapter.update(params[:chapter])
-    @chapter.save
-    redirect "/#{@book.slug}/#{@chapter.ordinal}"
+    redirect "/books/#{@book.slug}/chapters/#{@chapter.ordinal}"
   end
 
   get "/books/:title/chapters/:ordinal/modify_content" do
@@ -87,15 +81,15 @@ class ChaptersController < ApplicationController
   end
 
   post "/books/:b_id/chapters/:c_id/modify_content" do
-# TODO needs to block submission if empty
+# TODO needs to block submission if empty, and redirect if its not your chapter
     @book = Book.find(params[:b_id])
     @chapter = Chapter.find(params[:c_id])
     @chapter.content = params[:content]
-    @chapter.save
-    redirect "/#{@book.slug}/#{@chapter.ordinal}"
+    redirect "/books/#{@book.slug}/chapters/#{@chapter.ordinal}"
   end
 
-  delete "/books/:b_id/chapters/:c_id" do
+  delete "/books/:b_id/chapters/:c_id/delete" do
+# TODO redirect if its not your chapter (dont delete)
     @chapter = Chapter.find(params[:c_id])
     @chapter.delete
     erb :"/chapters/delete"
@@ -107,7 +101,7 @@ class ChaptersController < ApplicationController
    not your book
 =end
     @book = Book.find_by_slug(params[:title])
-    erb :"/books/reorder"
+    erb :"/chapters/reorder"
   end
 
   post "/books/:id/chapters/reorder" do
@@ -118,9 +112,16 @@ class ChaptersController < ApplicationController
     new_chapter_order.each do |chapter|
       current_chapter = Chapter.find_by(name: chapter[0])
       current_chapter.ordinal = chapter[1][0]
-      current_chapter.save
     end
-    redirect "books/#{@book.slug}"
+    redirect "/books/#{@book.slug}"
+  end
+
+  get "/books/:title/chapters/:ordinal" do
+# TODO redirect if book or chapter doesn't exist
+    @book = Book.find_by_slug(params[:title])
+    @chapter = Chapter.find_by(ordinal: params[:ordinal])
+    @your_book = @user.id == @book.user_id if @user && @book
+    erb :"/chapters/show"
   end
 
 end

@@ -1,8 +1,10 @@
 
 <h1> Chapter '<%= @chapter.ordinal %>:  <%= @chapter.name %>' Has Been Deleted </h1>
 
-<h2> With Contents: </h2>
+<% if @chapter.content %>
+  <h3> With Contents: </h2>
 
-<p> <%= @chapter.content %> </p>
-
-<!-- add links -->
+  <p> <%= @chapter.content %> </p>
+<% else %>
+  <p> It Had No Content </p>
+<% end %>

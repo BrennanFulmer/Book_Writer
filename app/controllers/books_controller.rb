@@ -12,7 +12,6 @@ class BooksController < ApplicationController
   end
 
   get "/books/new" do
-# TODO block creation of a book named books or new
     if @user
       erb :"/books/new"
     else
@@ -23,6 +22,7 @@ class BooksController < ApplicationController
 
   post "/books" do
 # TODO syntax for actually getting error - @new_book.errors.full_messages
+# TODO block creation of a book named new
     @new_book = Book.new(title: params[:title], user_id: session[:user_id])
 
     if @new_book.save
@@ -53,7 +53,7 @@ class BooksController < ApplicationController
       erb :"/books/edit"
     elsif @book
       flash[:message] = "You Don't Have Permission to Edit '#{params[:title]}'"
-      redirect "/books/<%= @book.slug %>"
+      redirect "/books/#{@book.slug}"
     else
       flash[:message] = "No '#{params[:title]}' Book Found"
       redirect "/books"
@@ -63,7 +63,7 @@ class BooksController < ApplicationController
   post "/books/:id" do
     @book = Book.find(params[:id])
     @book.update(title: params[:title])
-    redirect "books/#{@book.slug}"
+    redirect "/books/#{@book.slug}"
   end
 
   delete "/books/:id" do

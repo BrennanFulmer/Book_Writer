@@ -4,17 +4,36 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title> Book Writer </title>
+    <style type="text/css">
+      nav {
+        border-bottom: 2px solid black;
+        padding-bottom: .5em;
+      }
+      .navitem {
+        padding-right: 3em;
+      }
+    </style>
   </head>
 
   <body>
-<!--
     <nav>
-      <a href=""></a>
-      <a href=""></a>
-      <a href=""></a>
-      <a href=""></a>
+      <% if @user %>
+        <a class="navitem" href="/users/<%= @user.slug %>/books"> Your Books </a>
+        <a class="navitem" href="/books/new"> Create New Book </a>
+      <% end %>
+
+      <a class="navitem" href="/books"> List All Books </a>
+
+      <% unless @user %>
+        <a class="navitem" href="/"> Login </a>
+        <a class="navitem" href="/signup"> Signup </a>
+      <% end %>
+      
+      <% if @user %>
+        <a class="navitem" href="/logout"> Logout </a>
+      <% end %>
     </nav>
--->
+
     <%= yield %>
   </body>
 

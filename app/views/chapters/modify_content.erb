@@ -17,10 +17,18 @@
   <input type="submit" value="Write Chapter">
 </form>
 
-<!-- add links -->
+<br>
+<a href="/books/<%= @book.slug %>/chapters/<%= @chapter.ordinal %>/write"> Write/Add More To Chapter </a>
+<br>
+<br>
+<a href="/books/<%= @book.slug %>/chapters/new"> Create A New Chapter </a>
+<br>
+<br>
+<a href="/books/<%= @book.slug %>/chapters/<%= @chapter.ordinal %>/edit"> Edit This Chapter </a>
+<br>
 <br>
 <form action="/books/<%= @book.id %>/chapters/<%= @chapter.id %>/delete" method="post">
   <input type="hidden" name="_method" value="delete">
 
-  <input type="submit" value="delete chapter">
+  <input type="submit" value="Delete Chapter">
 </form>

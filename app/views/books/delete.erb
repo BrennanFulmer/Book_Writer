@@ -1,20 +1,15 @@
 
 <h1> '<%= @book.title %>' Has Been Deleted </h1>
 
-<% # binding.pry %>
+<% if !@book.chapters.empty? %>
+  <h3> Along With All Its Chapters: </h3>
 
-<%
-  # TODO show chapters
-%>
-
-<br>
-<a href="/books/new"> Create New Book </a>
-<br>
-<br>
-<a href="/users/<%= @user.slug %>/books"> Your Books </a>
-<br>
-<br>
-<a href="/books"> List All Books </a>
-<br>
-<br>
-<a href="/logout"> Logout </a>
+  <ul>
+    <% @book.chapters.order(:ordinal).each do |chapter| %>
+      <li> <%= chapter.ordinal %>. <%= chapter.name %> </li>
+      <p> <%= chapter.content %> </p>
+    <% end %>
+  </ul>
+<% else %>
+  <p> It Had No Chapters </p>
+<% end %>

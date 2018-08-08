@@ -16,17 +16,3 @@
 <% else %>
   <p> No Books Found </p>
 <% end %>
-
-<% if @user %>
-  <br>
-  <a href="/books/new"> Create New Book </a>
-  <br>
-  <br>
-  <a href="/users/<%= @user.slug %>/books"> Your Books </a>
-  <br>
-  <br>
-  <a href="/logout"> Logout </a>
-<% else %>
-  <br>
-  <a href="/"> Login </a>
-<% end %>
