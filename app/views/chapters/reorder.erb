@@ -17,12 +17,19 @@
 <form action="/books/<%= @book.id %>/chapters/reorder" method="post">
   <fieldset>
     <legend> Select A New Chapter Number: </legend>
+      <% if flash.has?(:message) %>
+        <div id="reorder chapter error">
+          <h2> <%= flash[:message] %> </h2>
+        </div>
+      <% end %>
+
       <% @book.chapters.order(:ordinal).each do |chapter| %>
         <br>
         <label> <%= chapter.name %> </label>
-        <input type="number" name="chapters[<%= chapter.name %>][]" min="1" max="99" pattern="\A[1-9][0-9]{0,1}\Z" required>
+        <input type="text" name="chapters[<%= chapter.name %>][]" min="1" max="99" pattern="\A[1-9][0-9]{0,1}\Z" required>
         <br>
       <% end %>
+
       <br>
       <input type="submit" value="Reorder Chapters">
   </fieldset>

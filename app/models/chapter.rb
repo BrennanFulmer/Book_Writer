@@ -16,10 +16,4 @@ class Chapter < ActiveRecord::Base
     name.downcase.strip.gsub(/\p{P}/, '').gsub(/\W+/, '-')
   end
 
-  def self.unique_ordinal?(new_chapter)
-    all.all? do |chapter|
-      chapter.ordinal != new_chapter.ordinal
-    end
-  end
-
 end

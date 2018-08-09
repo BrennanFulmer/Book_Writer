@@ -2,11 +2,13 @@
 <h1> Add A Chapter To <%= @book.title %> </h1>
 
 <p>
-  Chapter names must contain 5 to 64 characters.
+  Chapter names must contain 5 to 64 characters, and must be unique to a book.
   <br>
   Valid characters are any letter (either case), number, or spaces.
   <br>
   However you can't start with a space.
+  <br>
+  Chapter numbers cannot be longer than 2 characters, can only contain numbers, cannot start with 0, and must be unique to a book.
 </p>
 
 <% if !@book.chapters.empty? %>
@@ -38,7 +40,7 @@
     <br>
     <label for="chapter_ordinal"> Chapters Number: </label>
     <br>
-    <input type="number" name="chapter[ordinal]" id="chapter_ordinal" min="1" max="99" pattern="\A[1-9][0-9]{0,1}\Z" required>
+    <input type="text" name="chapter[ordinal]" id="chapter_ordinal" min="1" max="99" pattern="\A[1-9][0-9]{0,1}\Z" required>
     <br>
 
     <input type="hidden" name="chapter[book_id]" value="<%= @book.id %>">

@@ -1,21 +1,27 @@
 
 <h1> Book: <%= @book.title %> </h1>
 
-<h2> Chapter <%= @chapter.ordinal %>:  <%= @chapter.name %> </h2>
+<h3> Chapter <%= @chapter.ordinal %>:  <%= @chapter.name %> </h3>
 
 <p>
-  Chapter names must contain 5 to 64 characters.
+  Chapter names must contain 5 to 64 characters, and must be unique to a book.
   <br>
   Valid characters are any letter (either case), number, or spaces.
   <br>
   However you can't start with a space.
   <br>
-  Chapter numbers cannot be longer than 2 characters and can only contain numbers.
+  Chapter numbers cannot be longer than 2 characters, can only contain numbers, cannot start with 0, and must be unique to a book.
 </p>
 
 <form action="/books/<%= @book.id %>/chapters/<%= @chapter.id %>/edit" method="post">
   <fieldset>
     <legend> Edit Chapter: </legend>
+
+    <% if flash.has?(:message) %>
+      <div id="edit chapter error">
+        <h2> <%= flash[:message] %> </h2>
+      </div>
+    <% end %>
 
     <br>
     <label for="chapter_name"> New Chapter Name: </label>

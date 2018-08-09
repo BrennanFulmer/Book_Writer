@@ -6,7 +6,8 @@ class Book < ActiveRecord::Base
   has_many :chapters
 
   validates :title, :presence => true, :uniqueness => true,
-  length: { in: 5..64 }, format: { with: /\A[a-z0-9][a-z0-9 ]{4,63}\Z/i }
+  length: { in: 5..64 }, format: { with: /\A[a-z0-9][a-z0-9 ]{4,63}\Z/i },
+  exclusion: { in: %w(new) }
 
   validates :user_id, :presence => true, numericality: { only_integer: true }
 
