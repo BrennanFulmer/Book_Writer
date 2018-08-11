@@ -24,15 +24,23 @@ class ApplicationController < Sinatra::Base
       end
     end
 
-    def unique_ordinal?(chapter, book)
+    def unique_ordinal?(check_chapter, book)
       book.chapters.all? do |chapter|
-        chapter.ordinal != new_chapter.ordinal
+        chapter.ordinal != check_chapter.ordinal
       end
     end
 
-    def unique_name?(chapter, book)
+    def unique_name?(check_chapter, book)
       book.chapters.all? do |chapter|
-        chapter.name != new_chapter.name
+        chapter.name != check_chapter.name
+      end
+    end
+
+    def find_books_chapter_by_ordinal(ordinal, book)
+      target_ordinal = ordinal.to_i
+
+      book.chapters.detect do |chapter|
+        chapter.ordinal == target_ordinal
       end
     end
   end

@@ -78,10 +78,10 @@ class BooksController < ApplicationController
       if !@book.chapters.empty?
         @chapters = @book.chapters
         @book.chapters.each do |chapter|
-          chapter.delete
+          chapter.destroy
         end
       end
-      @book.delete
+      @book.destroy
       erb :"/books/delete"
     elsif !@book
       flash[:message] = "Error: The Book You Attempted To Delete Was Not Found"

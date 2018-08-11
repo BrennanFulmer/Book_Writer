@@ -26,7 +26,7 @@
       <% @book.chapters.order(:ordinal).each do |chapter| %>
         <br>
         <label> <%= chapter.name %> </label>
-        <input type="text" name="chapters[<%= chapter.name %>][]" min="1" max="99" pattern="\A[1-9][0-9]{0,1}\Z" required>
+        <input type="number" name="chapters[<%= chapter.name %>][]" min="1" max="99" value="<%= chapter.ordinal %>" required>
         <br>
       <% end %>
 

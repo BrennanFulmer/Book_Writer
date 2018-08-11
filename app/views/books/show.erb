@@ -37,4 +37,7 @@
 
     <input type="submit" value="Delete Book">
   </form>
+<% else %>
+  <br>
+  <a href="/users/<%= @author.slug %>/books"> More Books By This User </a>
 <% end %>

@@ -36,4 +36,8 @@
 
     <input type="submit" value="Delete Chapter">
   </form>
+<% else %>
+<br>
+<a href="/users/<%= @author.slug %>/books"> More Books By This User </a>
+<br>
 <% end %>

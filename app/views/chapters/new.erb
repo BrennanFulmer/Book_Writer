@@ -40,7 +40,7 @@
     <br>
     <label for="chapter_ordinal"> Chapters Number: </label>
     <br>
-    <input type="text" name="chapter[ordinal]" id="chapter_ordinal" min="1" max="99" pattern="\A[1-9][0-9]{0,1}\Z" required>
+    <input type="number" name="chapter[ordinal]" id="chapter_ordinal" min="1" max="99" required>
     <br>
 
     <input type="hidden" name="chapter[book_id]" value="<%= @book.id %>">

@@ -40,7 +40,7 @@ class ChaptersController < ApplicationController
 
   get "/books/:title/chapters/:ordinal/write" do
     @book = Book.find_by_slug(params[:title])
-    @chapter = Chapter.find_by(ordinal: params[:ordinal])
+    @chapter = find_books_chapter_by_ordinal(params[:ordinal], @book)
     @your_book = @user.id == @book.user_id if @user && @book
 
     if !@book
@@ -87,7 +87,7 @@ class ChaptersController < ApplicationController
 
   get "/books/:title/chapters/:ordinal/edit" do
     @book = Book.find_by_slug(params[:title])
-    @chapter = Chapter.find_by(ordinal: params[:ordinal])
+    @chapter = find_books_chapter_by_ordinal(params[:ordinal], @book)
     @your_book = @user.id == @book.user_id if @user && @book
 
     if !@book
@@ -128,7 +128,7 @@ class ChaptersController < ApplicationController
 
   get "/books/:title/chapters/:ordinal/modify_content" do
     @book = Book.find_by_slug(params[:title])
-    @chapter = Chapter.find_by(ordinal: params[:ordinal])
+    @chapter = find_books_chapter_by_ordinal(params[:ordinal], @book)
     @your_book = @user.id == @book.user_id if @user && @book
 
     if !@book
@@ -185,7 +185,7 @@ class ChaptersController < ApplicationController
       flash[:message] = "Error: Chapter '#{params[:ordinal]}' Not Found"
       redirect "/books/#{@book.slug}"
     else
-      @chapter.delete
+      @chapter.destroy
       erb :"/chapters/delete"
     end
   end
@@ -219,7 +219,6 @@ class ChaptersController < ApplicationController
   post "/books/:id/chapters/reorder" do
     @book = Book.find(params[:id])
     new_chapter_order = params[:chapters].to_a
-
     test_chapter_order = new_chapter_order.dup.transpose[1].flatten.uniq
 
     test_chapter_order.delete_if do |new_ordinal|
@@ -243,7 +242,7 @@ class ChaptersController < ApplicationController
 
   get "/books/:title/chapters/:ordinal" do
     @book = Book.find_by_slug(params[:title])
-    @chapter = Chapter.find_by(ordinal: params[:ordinal])
+    @chapter = find_books_chapter_by_ordinal(params[:ordinal], @book)
 
     if !@book
       if @user

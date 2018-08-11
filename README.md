@@ -18,7 +18,7 @@ The software is available as open source under the terms of the [MIT License](ht
 
 ## Blog Post
 
-MISSING
+http://brennanfulmer.github.io/the_experience_of_making_book_writer_my_sinatra_project
 
 ## Video Walkthrough
 
