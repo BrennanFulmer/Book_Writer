@@ -2,35 +2,26 @@
 class ChaptersController < ApplicationController
   use Rack::Flash
 
-  before "/books*" do
+  before do
     @user = current_user
   end
 
   get "/books/:title/chapters/new" do
     @book = Book.find_by_slug(params[:title])
     @your_book = @user.id == @book.user_id if @user && @book
-
-    if @book && @your_book
-      erb :"/chapters/new"
-    elsif !@book
-      flash[:message] = "Error: No '#{params[:title]}' Book Found"
-      redirect "/books"
-    else
-      if @user
-        flash[:message] = "Error: You Can't Add Chapters To Someone Elses Books"
-        redirect "/users/#{@user.username}/books"
-      else
-        flash[:message] = "Error: You Have To Be Signed In To Add Chapters"
-        redirect "/"
-      end
-    end
+    redirect_if_not_logged_in
+    redirect_if_no_book
+    redirect_if_not_your_book
+    erb :"/chapters/new"
   end
 
   post "/books/:id/chapters" do
     @chapter = Chapter.new(params[:chapter])
     @book = Book.find(params[:id])
 
-    if unique_name?(@chapter, @book) && unique_ordinal?(@chapter, @book) && @chapter.save
+    if unique_name?(params[:chapter][:name], @book) &&
+       unique_ordinal?(params[:chapter][:ordinal], @book) &&
+       @chapter.save
       redirect "/books/#{@book.slug}/chapters/#{@chapter.ordinal}"
     else
       flash[:message] = "Error: Invalid Chapter Title Or Number"
@@ -42,29 +33,11 @@ class ChaptersController < ApplicationController
     @book = Book.find_by_slug(params[:title])
     @chapter = find_books_chapter_by_ordinal(params[:ordinal], @book)
     @your_book = @user.id == @book.user_id if @user && @book
-
-    if !@book
-      if @user
-        flash[:message] = "Error: No '#{params[:title]}' Book Found"
-        redirect "/users/#{@user.slug}/books"
-      else
-        flash[:message] = "Error: No '#{params[:title]}' Book Found"
-        redirect "/books"
-      end
-    elsif !@chapter
-      flash[:message] = "Error: Chapter '#{params[:ordinal]}' Not Found"
-      redirect "/books/#{@book.slug}"
-    elsif !@your_book
-      if @user
-        flash[:message] = "Error: You Can't Write Someone Else's Chapter"
-        redirect "/users/#{@user.slug}/books"
-      else
-        flash[:message] = "Error: You Must Sign In To Write A Chapter"
-        redirect "/"
-      end
-    else
-      erb :"/chapters/write"
-    end
+    redirect_if_not_logged_in
+    redirect_if_no_book
+    redirect_if_no_chapter
+    redirect_if_not_your_book
+    erb :"/chapters/write"
   end
 
   post "/books/:b_id/chapters/:c_id/write" do
@@ -89,40 +62,25 @@ class ChaptersController < ApplicationController
     @book = Book.find_by_slug(params[:title])
     @chapter = find_books_chapter_by_ordinal(params[:ordinal], @book)
     @your_book = @user.id == @book.user_id if @user && @book
-
-    if !@book
-      if @user
-        flash[:message] = "Error: No '#{params[:title]}' Book Found"
-        redirect "/users/#{@user.slug}/books"
-      else
-        flash[:message] = "Error: No '#{params[:title]}' Book Found"
-        redirect "/books"
-      end
-    elsif !@chapter
-      flash[:message] = "Error: Chapter '#{params[:ordinal]}' Not Found"
-      redirect "/books/#{@book.slug}"
-    elsif !@your_book
-      if @user
-        flash[:message] = "Error: You Can't Edit Someone Else's Chapter"
-        redirect "/users/#{@user.slug}/books"
-      else
-        flash[:message] = "Error: You Must Sign In To Edit A Chapter"
-        redirect "/"
-      end
-    else
-      erb :"/chapters/edit"
-    end
+    redirect_if_not_logged_in
+    redirect_if_no_book
+    redirect_if_no_chapter
+    redirect_if_not_your_book
+    erb :"/chapters/edit"
   end
 
   post "/books/:b_id/chapters/:c_id/edit" do
     @book = Book.find(params[:b_id])
     @chapter = Chapter.find(params[:c_id])
 
-    if unique_name?(@chapter, @book) && unique_ordinal?(@chapter, @book) && @chapter.update(params[:chapter])
+    if unique_name?(params[:chapter][:name], @book) &&
+       unique_ordinal?(params[:chapter][:ordinal], @book) &&
+       @chapter.update(params[:chapter])
       redirect "/books/#{@book.slug}/chapters/#{@chapter.ordinal}"
     else
       flash[:message] = "Error: Submission Invalid"
-      redirect "/books/#{@book.slug}/chapters/#{Chapter.find(params[:c_id]).ordinal}/edit"
+      @chapter = Chapter.find(params[:c_id])
+      redirect "/books/#{@book.slug}/chapters/#{@chapter.ordinal}/edit"
     end
   end
 
@@ -130,25 +88,12 @@ class ChaptersController < ApplicationController
     @book = Book.find_by_slug(params[:title])
     @chapter = find_books_chapter_by_ordinal(params[:ordinal], @book)
     @your_book = @user.id == @book.user_id if @user && @book
+    redirect_if_not_logged_in
+    redirect_if_no_book
+    redirect_if_no_chapter
+    redirect_if_not_your_book
 
-    if !@book
-      if @user
-        flash[:message] = "Error: No '#{params[:title]}' Book Found"
-        redirect "/users/#{@user.slug}/books"
-      else
-        flash[:message] = "Error: No '#{params[:title]}' Book Found"
-        redirect "/books"
-      end
-    elsif !@chapter
-      flash[:message] = "Error: Chapter '#{params[:ordinal]}' Not Found"
-      redirect "/books/#{@book.slug}"
-    elsif !@user
-      flash[:message] = "Error: You Must Be Signed In To Modify A Chapters Contents"
-      redirect "/"
-    elsif !@your_book
-      flash[:message] = "Error: You Can't Modify The Contents Of Someone Else's Chapter"
-      redirect "/users/#{@user.slug}/books"
-    elsif !@chapter.content
+    if !@chapter.content
       flash[:message] = "Error: There Is No Content To Modify"
       redirect "/books/#{@book.slug}/chapters/#{@chapter.ordinal}/write"
     else
@@ -172,45 +117,20 @@ class ChaptersController < ApplicationController
   delete "/books/:b_id/chapters/:c_id/delete" do
     @book = Book.find(params[:b_id])
     @chapter = Chapter.find(params[:c_id])
-
-    if !@book
-      if @user
-        flash[:message] = "Error: No '#{params[:title]}' Book Found"
-        redirect "/users/#{@user.slug}/books"
-      else
-        flash[:message] = "Error: No '#{params[:title]}' Book Found"
-        redirect "/books"
-      end
-    elsif !@chapter
-      flash[:message] = "Error: Chapter '#{params[:ordinal]}' Not Found"
-      redirect "/books/#{@book.slug}"
-    else
-      @chapter.destroy
-      erb :"/chapters/delete"
-    end
+    @chapter.destroy
+    erb :"/chapters/delete"
   end
 
   get "/books/:title/chapters/reorder" do
     @book = Book.find_by_slug(params[:title])
     @your_book = @user.id == @book.user_id if @user && @book
+    redirect_if_not_logged_in
+    redirect_if_no_book
+    redirect_if_not_your_book
 
-    if !@book
-      if @user
-        flash[:message] = "Error: No '#{params[:title]}' Book Found"
-        redirect "/users/#{@user.slug}/books"
-      else
-        flash[:message] = "Error: No '#{params[:title]}' Book Found"
-        redirect "/books"
-      end
-    elsif @book.chapters.empty? || @book.chapters.length == 1
+    if @book.chapters.empty? || @book.chapters.length == 1
       flash[:message] = "Error: Not Enough Chapters To Reorder"
       redirect "/books/#{@book.slug}"
-    elsif !@user
-      flash[:message] = "Error: You Must Be Signed In To Reorder A Books Chapters"
-      redirect "/"
-    elsif !@your_book
-      flash[:message] = "Error: You Can't Modify The Contents Of Someone Else's Chapter"
-      redirect "/users/#{@user.slug}/books"
     else
       erb :"/chapters/reorder"
     end
@@ -243,23 +163,11 @@ class ChaptersController < ApplicationController
   get "/books/:title/chapters/:ordinal" do
     @book = Book.find_by_slug(params[:title])
     @chapter = find_books_chapter_by_ordinal(params[:ordinal], @book)
-
-    if !@book
-      if @user
-        flash[:message] = "Error: No '#{params[:title]}' Book Found"
-        redirect "/users/#{@user.slug}/books"
-      else
-        flash[:message] = "Error: No '#{params[:title]}' Book Found"
-        redirect "/books"
-      end
-    elsif !@chapter
-      flash[:message] = "Error: Chapter '#{params[:ordinal]}' Not Found"
-      redirect "/books/#{@book.slug}"
-    else
-      @your_book = @user.id == @book.user_id if @user && @book
-      @author = User.find(@book.user_id) unless @your_book
-      erb :"/chapters/show"
-    end
+    @your_book = @user.id == @book.user_id if @user && @book
+    @author = User.find(@book.user_id) if !@your_book
+    redirect_if_no_book
+    redirect_if_no_chapter
+    erb :"/chapters/show"
   end
 
 end

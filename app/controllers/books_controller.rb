@@ -2,7 +2,7 @@
 class BooksController < ApplicationController
   use Rack::Flash
 
-  before "/books*" do
+  before do
     @user = current_user
   end
 
@@ -12,12 +12,8 @@ class BooksController < ApplicationController
   end
 
   get "/books/new" do
-    if @user
-      erb :"/books/new"
-    else
-      flash[:message] = "Error: You Must Be Signed In To Create A Book"
-      redirect "/"
-    end
+    redirect_if_not_logged_in
+    erb :"/books/new"
   end
 
   post "/books" do
@@ -32,32 +28,20 @@ class BooksController < ApplicationController
   end
 
   get "/books/:title" do
-    if @book = Book.find_by_slug(params[:title])
-      @your_book = @user.id == @book.user_id if @user
-      @author = User.find(@book.user_id) unless @your_book
-      erb :"/books/show"
-    else
-      flash[:message] = "Error: No '#{params[:title]}' Book Found"
-      redirect "/books"
-    end
+    @book = Book.find_by_slug(params[:title])
+    redirect_if_no_book
+    @your_book = @user.id == @book.user_id if @user
+    @author = User.find(@book.user_id) if !@your_book
+    erb :"/books/show"
   end
 
   get "/books/:title/edit" do
     @book = Book.find_by_slug(params[:title])
     @your_book = @user.id == @book.user_id if @user && @book
-
-    if !@book
-      flash[:message] = "Error: No '#{params[:title]}' Book Found"
-      redirect "/books"
-    elsif !@user
-      flash[:message] = "Error: Sign In To Edit Books"
-      redirect "/"
-    elsif !@your_book
-      flash[:message] = "Error: You Can't Edit Someone Else's Book"
-      redirect "/users/#{@user.slug}/books"
-    else
-      erb :"/books/edit"
-    end
+    redirect_if_not_logged_in
+    redirect_if_no_book
+    redirect_if_not_your_book
+    erb :"/books/edit"
   end
 
   post "/books/:id" do
@@ -74,32 +58,18 @@ class BooksController < ApplicationController
     @book = Book.find(params[:id])
     @your_book = @user.id == @book.user_id if @user && @book
 
-    if @book && @your_book
-      if !@book.chapters.empty?
-        @chapters = @book.chapters
-        @book.chapters.each do |chapter|
-          chapter.destroy
-        end
+    if !@book.chapters.empty?
+      @chapters = @book.chapters
+      @book.chapters.each do |chapter|
+        chapter.destroy
       end
-      @book.destroy
-      erb :"/books/delete"
-    elsif !@book
-      flash[:message] = "Error: The Book You Attempted To Delete Was Not Found"
-      redirect "/books"
-    elsif !@your_book
-      flash[:message] = "Error: You Can't Delete A Book That's Not Yours"
-      redirect "/users/#{@user.slug}/books"
-    else
-      flash[:message] = "Error: Sign In To Delete Books"
-      redirect "/"
     end
+    @book.destroy
+    erb :"/books/delete"
   end
 
   get "/users/:author/books" do
-    @author = User.find_by_slug(params[:author])
-    @user = current_user
-
-    if @author
+    if @author = User.find_by_slug(params[:author])
       @your_books = @author == @user
       erb :"/books/users_books"
     else

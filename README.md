@@ -6,7 +6,7 @@ Book Writer is an application written in Ruby that uses Sinatra and ActiveRecord
 
 ## Installation Instructions:
 
-To install clone this repository to your local machine. Next open your command line and run the command "shotgun" (without quotes). From there browser to the link on your screen and you'll be in the app.
+To install clone this repository to your local machine. Next open your command line and run the command "shotgun" (without quotes). From there browser to the link on your screen and you'll be in the app. Note you may need to install bundler, and other dependencies before shotgun and the software in general will work.
 
 ## Contributors Guide:
 

@@ -3,20 +3,17 @@ class UsersController < ApplicationController
   use Rack::Flash
 
   get "/signup" do
-    if user = current_user
-      flash[:message] = "Error: Your Already Logged In"
-      redirect "/users/#{user.slug}/books"
-    else
-      erb :"/users/new"
-    end
+    @user = current_user
+    redirect_if_already_logged_in
+    erb :"/users/new"
   end
 
   post "/signup" do
-    new_user = User.new(params[:user])
+    @user = User.new(params[:user])
 
-    if new_user.save
-      session[:user_id] = new_user.id
-      redirect "/users/#{new_user.slug}/books"
+    if @user.save
+      session[:user_id] = @user.id
+      redirect "/users/#{@user.slug}/books"
     else
       flash[:message] = "Error: Invalid Username and/or Password"
       redirect "/signup"
@@ -24,11 +21,11 @@ class UsersController < ApplicationController
   end
 
   post "/login" do
-    user = User.find_by(username: params[:username])
+    @user = User.find_by(username: params[:username])
 
-    if user && user.authenticate(params[:password])
-      session[:user_id] = user.id
-      redirect "/users/#{user.slug}/books"
+    if @user && @user.authenticate(params[:password])
+      session[:user_id] = @user.id
+      redirect "/users/#{@user.slug}/books"
     else
       flash[:message] = "Error: Invalid Username and/or Password"
       redirect "/"

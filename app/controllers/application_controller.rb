@@ -9,12 +9,9 @@ class ApplicationController < Sinatra::Base
   end
 
   get "/" do
-    if user = current_user
-      flash[:message] = "Error: Your Already Logged In"
-      redirect "/users/#{user.slug}/books"
-    else
-      erb :index
-    end
+    @user = current_user
+    redirect_if_already_logged_in
+    erb :index
   end
 
   helpers do
@@ -24,15 +21,16 @@ class ApplicationController < Sinatra::Base
       end
     end
 
-    def unique_ordinal?(check_chapter, book)
+    def unique_ordinal?(chapter_ordinal, book)
+      chapter_number = chapter_ordinal.to_i
       book.chapters.all? do |chapter|
-        chapter.ordinal != check_chapter.ordinal
+        chapter.ordinal != chapter_number
       end
     end
 
-    def unique_name?(check_chapter, book)
+    def unique_name?(chapter_name, book)
       book.chapters.all? do |chapter|
-        chapter.name != check_chapter.name
+        chapter.name != chapter_name
       end
     end
 
@@ -43,6 +41,42 @@ class ApplicationController < Sinatra::Base
         chapter.ordinal == target_ordinal
       end
     end
+
+    def redirect_if_already_logged_in
+      if @user
+        flash[:message] = "Error: Your Already Logged In"
+        redirect "/users/#{@user.slug}/books"
+      end
+    end
+
+    def redirect_if_not_logged_in
+      if !@user
+        flash[:message] = "Error: Log In To Do That"
+        redirect "/"
+      end
+    end
+
+    def redirect_if_no_book
+      if !@book
+        flash[:message] = "Error: No '#{params[:title]}' Book Found"
+        redirect "/books"
+      end
+    end
+
+    def redirect_if_not_your_book
+      if !@your_book
+        flash[:message] = "Error: You Can't Change Someone Else's Book"
+        redirect "/users/#{@user.slug}/books"
+      end
+    end
+
+    def redirect_if_no_chapter
+      if !@chapter
+        flash[:message] = "Error: Chapter '#{params[:ordinal]}' Not Found"
+        redirect "/books/#{@book.slug}"
+      end
+    end
+
   end
 
 end
