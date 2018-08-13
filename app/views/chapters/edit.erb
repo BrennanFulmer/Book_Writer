@@ -13,7 +13,7 @@
   Chapter numbers cannot be longer than 2 characters, can only contain numbers, cannot start with 0, and must be unique to a book.
 </p>
 
-<form action="/books/<%= @book.id %>/chapters/<%= @chapter.id %>/edit" method="post">
+<form action="/books/<%= @book.id %>/chapters/<%= @chapter.id %>" method="post">
   <fieldset>
     <legend> Edit Chapter: </legend>
 
@@ -56,7 +56,7 @@
 <a href="/books/<%= @book.slug %>/chapters/new"> Create A New Chapter </a>
 <br>
 <br>
-<form action="/books/<%= @book.id %>/chapters/<%= @chapter.id %>/delete" method="post">
+<form action="/books/<%= @book.id %>/chapters/<%= @chapter.id %>" method="post">
   <input type="hidden" name="_method" value="delete">
 
   <input type="submit" value="Delete Chapter">

@@ -69,7 +69,7 @@ class ChaptersController < ApplicationController
     erb :"/chapters/edit"
   end
 
-  post "/books/:b_id/chapters/:c_id/edit" do
+  post "/books/:b_id/chapters/:c_id" do
     @book = Book.find(params[:b_id])
     @chapter = Chapter.find(params[:c_id])
 
@@ -114,7 +114,7 @@ class ChaptersController < ApplicationController
     end
   end
 
-  delete "/books/:b_id/chapters/:c_id/delete" do
+  delete "/books/:b_id/chapters/:c_id" do
     @book = Book.find(params[:b_id])
     @chapter = Chapter.find(params[:c_id])
     @chapter.destroy
